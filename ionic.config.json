@@ -1,0 +1,8 @@
+{
+  "name": "trackDiesel",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular",
+  "id": "2cb7fe98"
+}
