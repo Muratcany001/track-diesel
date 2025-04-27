@@ -11,17 +11,18 @@ const routes: Routes = [
     loadChildren: () => import('./main/main.module').then( m => m.MainPageModule)
   },
   {
-    path: 'search',
-    loadChildren: () => import('./search/search.module').then( m => m.SearchPageModule)
-  },
-  {
     path: 'delete',
     loadChildren: () => import('./delete/delete.module').then( m => m.DeletePageModule)
   },
   {
-    path: 'update',
-    loadChildren: () => import('./update/update.module').then( m => m.UpdatePageModule)
+    path: 'add',
+    loadChildren: () => import('./search/add.module').then( m => m.AddPageModule)
   },
+  {
+    path: 'login',
+    loadChildren: () => import('./login/login.module').then( m => m.LoginPageModule)
+  }
+  
 
 ];
 @NgModule({

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Observable, catchError, map, tap, throwError } from 'rxjs';
 import { NavController } from '@ionic/angular';
 import { 
@@ -23,13 +23,13 @@ import { CommonModule } from '@angular/common';
 import { ApiServiceService } from '../api-service.service';
 
 @Component({
-  selector: 'app-tab3',
-  templateUrl: './tab3.page.html',
-  styleUrls: ['./tab3.page.scss'],
-  standalone: false,
+  selector: 'app-add',
+  templateUrl: './add.page.html',
+  styleUrls: ['./add.page.scss'],
+  standalone:false,
+  providers: [ApiServiceService],
 })
-export class Tab3Page {
-
+export class AddPage implements OnInit {
   errorForm : ReactiveFormsModule
   plateNumber: string = '';
   addForm!: FormGroup;
@@ -39,8 +39,7 @@ export class Tab3Page {
   constructor(
     private navCtrl:NavController,
     private apiService:ApiServiceService,
-    private formBuilder: FormBuilder,
-    private httpClient : HttpClient
+    private formBuilder: FormBuilder
   ) {
     this.errorForm = this.formBuilder.group({
       errorName: ['', Validators.required]

@@ -1,0 +1,45 @@
+<ion-content>
+  <ion-grid class="ion-padding">
+    <ion-row class="ion-justify-content-center">
+      <ion-col size="12" size-md="8" size-lg="6" size-xl="4">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title class="ion-text-center">Giriş Yap</ion-card-title>
+          </ion-card-header>
+
+          <ion-card-content>
+            <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+              <ion-item>
+                <ion-label position="floating">Kullanıcı Adı</ion-label>
+                <ion-input 
+                  type="text" 
+                  formControlName="name"
+                  placeholder="Kullanıcı adınızı girin">
+                </ion-input>
+              </ion-item>
+
+              <ion-item>
+                <ion-label position="floating">Şifre</ion-label>
+                <ion-input 
+                  type="password" 
+                  formControlName="password"
+                  placeholder="Şifrenizi girin">
+                </ion-input>
+              </ion-item>
+
+              <ion-button 
+                type="submit" 
+                expand="block" 
+                class="ion-margin-top"
+                [disabled]="loginForm.invalid">
+                Giriş Yap
+              </ion-button>
+            </form>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
+
+<router-outlet></router-outlet>

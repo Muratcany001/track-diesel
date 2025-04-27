@@ -1,73 +1,74 @@
-
-
 <ion-content class="ion-padding">
-  <!-- Plaka Girişi Alanı -->
-  <div class="plate-entry ion-margin-vertical">
-    <form>
-      <ion-item>
-        <ion-input 
-          type="text" 
-          formControlName="plateNumber" 
-          placeholder="Plaka Girin..."
-          clearInput>
-        </ion-input>
-      </ion-item>
-      
-      <ion-button 
-        type="submit" 
-        expand="block" 
-        class="ion-margin-top"
-        [disabled]="!loginForm.valid">
-        Plaka Sorgula
-      </ion-button>
-      
-      <ion-note *ngIf="message" 
-        [color]="message.includes('bulundu') ? 'success' : 'danger'"
-        class="ion-margin-top">
-        {{message}}
-      </ion-note>
-    </form>
-  </div>
+  <div class="container">
+    <!-- Plaka Girişi Alanı -->
+    <ion-card class="main-content">
+      <ion-card-content class="plate-entry">
+        <form [formGroup]="addForm">
+          <ion-item>
+            <ion-input 
+              type="text" 
+              formControlName="plateNumber" 
+              placeholder="Plaka Girin..."
+              clearInput>
+            </ion-input>
+          </ion-item>
+          
+          <ion-button 
+            type="submit" 
+            expand="block" 
+            class="ion-margin-top"
+            [disabled]="!addForm.valid"
+            (click)="searchPlate()">
+            Plaka Sorgula
+          </ion-button>
+          
+          <ion-note *ngIf="message" 
+            [color]="message.includes('bulundu') ? 'success' : 'danger'"
+            class="ion-margin-top">
+            {{ message }}
+          </ion-note>
+        </form>
+      </ion-card-content>
+    </ion-card>
 
-  <!-- Veritabanı Bilgisi Paneli -->
-  <ion-card *ngIf="carDetails" class="info-panel">
-    <ion-card-header>
-      <ion-card-title>Araç Bilgileri</ion-card-title>
-    </ion-card-header>
-    
-    <ion-card-content>
-      <ion-list lines="none">
-        <ion-item>
-          <ion-label><strong>Plaka:</strong></ion-label>
-          <ion-text>{{ carDetails.plate }}</ion-text>
-        </ion-item>
-        
-        <ion-item>
-          <ion-label><strong>Marka/Model:</strong></ion-label>
-          <ion-text>{{ carDetails.name }}</ion-text>
-        </ion-item>
-        
-        <ion-item>
-          <ion-label><strong>Araç Yaşı:</strong></ion-label>
-          <ion-text>{{ carDetails.age }}</ion-text>
-        </ion-item>
-        
-        <ion-item>
-          <ion-label><strong>Son Bakım Tarihi:</strong></ion-label>
-          <ion-text>{{ carDetails.lastMaintenanceDate || 'Bakım kaydı yok' }}</ion-text>
-        </ion-item>
-      </ion-list>
-    </ion-card-content>
-  </ion-card>
+    <!-- Veritabanı Bilgisi Paneli -->
+    <ion-card *ngIf="carDetails" class="info-panel">
+      <ion-card-header>
+        <ion-card-title>Araç Bilgileri</ion-card-title>
+      </ion-card-header>
+      
+      <ion-card-content>
+        <ion-list lines="none">
+          <ion-item>
+            <ion-label><strong>Plaka:</strong></ion-label>
+            <ion-text>{{ carDetails.plate }}</ion-text>
+          </ion-item>
+          
+          <ion-item>
+            <ion-label><strong>Marka/Model:</strong></ion-label>
+            <ion-text>{{ carDetails.name }}</ion-text>
+          </ion-item>
+          
+          <ion-item>
+            <ion-label><strong>Araç Yaşı:</strong></ion-label>
+            <ion-text>{{ carDetails.age }}</ion-text>
+          </ion-item>
+          
+          <ion-item>
+            <ion-label><strong>Son Bakım Tarihi:</strong></ion-label>
+            <ion-text>{{ carDetails.lastMaintenanceDate || 'Bakım kaydı yok' }}</ion-text>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
 
-  <!-- Arıza Geçmişi -->
-  <ion-card *ngIf="carDetails" class="error-history">
-    <ion-card-header>
-      <ion-card-title>Arıza Geçmişi</ion-card-title>
-    </ion-card-header>
-    
-    <ion-card-content>
-      <ng-container *ngIf="carDetails.errorHistory?.length > 0; else noErrorHistory">
+    <!-- Arıza Geçmişi -->
+    <ion-card *ngIf="carDetails?.errorHistory?.length > 0" class="error-history">
+      <ion-card-header>
+        <ion-card-title>Arıza Geçmişi</ion-card-title>
+      </ion-card-header>
+      
+      <ion-card-content>
         <ion-list lines="full">
           <ion-item-sliding *ngFor="let issue of carDetails.errorHistory">
             <ion-item>
@@ -85,13 +86,20 @@
             </ion-item>
           </ion-item-sliding>
         </ion-list>
-      </ng-container>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Hata Bulunamadı Durumu -->
+    <ion-card *ngIf="!carDetails?.errorHistory?.length" class="error-history">
+      <ion-card-header>
+        <ion-card-title>Arıza Geçmişi</ion-card-title>
+      </ion-card-header>
       
-      <ng-template #noErrorHistory>
+      <ion-card-content>
         <ion-item>
           <ion-label class="ion-text-center">Bu araca ait kayıtlı arıza bulunamadı.</ion-label>
         </ion-item>
-      </ng-template>
-    </ion-card-content>
-  </ion-card>
+      </ion-card-content>
+    </ion-card>
+  </div>
 </ion-content>
