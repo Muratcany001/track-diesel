@@ -20,12 +20,11 @@ export interface newError{
 export interface Car {
   id?: number;
   plate: string;
-  name:string;
-  age:number;
-  errorHistory?: { $values: Issue[]};
-  //errorHistory: { $values: Issue[] };
-  lastMaintenanceDate:Date | string;
-  userId:String;
+  name: string;
+  age: number;
+  errorHistory?: { $values: Issue[] };
+  lastMaintenanceDate: Date | string;
+  userId: string;
 }
 export interface CarWithoutValues {
   id?: number;
@@ -37,15 +36,15 @@ export interface CarWithoutValues {
   userId: string;
 }
 
-export interface Issue{
-  id?:number;
-  model?:string;
-  engineType?:string;
-  partName?:string;
-  description?:string;
-  dateReported?:Date | string;
-  isReplaced:boolean;
-  carId?:number;
+export interface Issue {
+  id?: number;
+  model?: string;
+  engineType?: string;
+  partName?: string;
+  description?: string;
+  dateReported?: Date | string;
+  isReplaced: boolean;
+  carId?: number;
 }
 @Injectable({
   providedIn: 'root'

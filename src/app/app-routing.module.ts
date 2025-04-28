@@ -15,15 +15,13 @@ const routes: Routes = [
     loadChildren: () => import('./delete/delete.module').then( m => m.DeletePageModule)
   },
   {
-    path: 'add',
-    loadChildren: () => import('./search/add.module').then( m => m.AddPageModule)
-  },
-  {
     path: 'login',
     loadChildren: () => import('./login/login.module').then( m => m.LoginPageModule)
-  }
-  
-
+  },
+  {
+    path: 'addPage',
+    loadChildren: () => import('./add-car/add-car.module').then(m => m.AddCarPageModule)
+  },
 ];
 @NgModule({
   imports: [

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ApiServiceService } from '../api-service.service';
-import { catchError, of } from 'rxjs';
+import { catchError, map, of } from 'rxjs';
 import { NavController } from '@ionic/angular';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
@@ -43,23 +43,36 @@ export class MainPage implements OnInit {
     if (this.addForm.invalid) {
       return;
     }
-
+  
     const token = localStorage.getItem('token');
     if (!token) {
       alert('Lütfen önce giriş yapın');
       this.navCtrl.navigateForward(['/login']);
       return;
     }
-
+  
     const plateNumber = this.addForm.value.plateNumber;
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json',
       'Accept': 'application/json'
     });
-
+  
     this.apiService.getCarByPlate(plateNumber)
       .pipe(
+        map((response: any) => {
+          console.log('API Yanıtı:', response);
+          if (response.errorHistory && response.errorHistory['$values'] && Array.isArray(response.errorHistory['$values'])) {
+            return {
+              ...response,
+              errorHistory: response.errorHistory['$values'].map((issue: any) => ({
+                ...issue,
+                dateReported: new Date(issue.dateReported)
+              }))
+            };
+          }
+          return response;
+        }),
         catchError(err => {
           this.message = "Araç bulunamadı";
           console.error('API Hatası:', err);
@@ -68,43 +81,9 @@ export class MainPage implements OnInit {
       )
       .subscribe(carData => {
         if (carData) {
-          console.log('Gelen Araç Verisi:', carData);
+          console.log('Dönüştürülmüş Araç Verisi:', carData);
           this.carDetails = carData;
           this.message = "Araç bulundu";
-        }
-      });
-  }
-
-  // Arıza kodu sorgulama
-  getError(): void {
-    if (this.errorForm.invalid) {
-      this.message = 'Geçersiz form işlemi';
-      this.isSuccess = false;
-      return;
-    }
-
-    const errorName = this.errorForm.value.errorName;
-    this.apiService.getError(errorName)
-      .pipe(
-        catchError(err => {
-          console.error('API Hatası:', err);
-          this.message = 'API bağlantı hatası';
-          this.isSuccess = false;
-          return of(null);
-        })
-      )
-      .subscribe((response: any) => {
-        if (response && response.code) {
-          this.code = response.code;
-          this.description = response.description;
-          this.message = 'İşlem başarılı';
-          this.isSuccess = true;
-        } else {
-          this.code = '';
-          this.description = '';
-          this.message = 'Arıza kodu bulunamadı';
-          alert(this.message);
-          this.isSuccess = false;
         }
       });
   }
