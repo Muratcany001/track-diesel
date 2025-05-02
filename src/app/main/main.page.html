@@ -1,42 +1,9 @@
-<ion-menu contentId="main-content" side="start">
-  <ion-header>
-    <ion-toolbar color="primary">
-      <ion-title>Yönetim Paneli</ion-title>
-    </ion-toolbar>
-  </ion-header>
-  <ion-content>
-    <ion-list>
-      <ion-item button detail="false" routerLink="/main" routerDirection="root">
-        <ion-icon slot="start" name="home-outline"></ion-icon>
-        <ion-label>Ana sayfa</ion-label>
-      </ion-item>
-      
-      <ion-item button detail="false" routerLink="/add" routerDirection="root">
-        <ion-icon slot="start" name="add-circle-outline"></ion-icon>
-        <ion-label>Araç Ekle</ion-label>
-      </ion-item>
-      
-      <ion-item button detail="false" routerLink="/updatePage" routerDirection="root">
-        <ion-icon slot="start" name="create-outline"></ion-icon>
-        <ion-label>Araç Güncelle</ion-label>
-      </ion-item>
-      
-      <ion-item button detail="false" routerLink="/deletePage" routerDirection="root">
-        <ion-icon slot="start" name="trash-outline"></ion-icon>
-        <ion-label>Araç Sil</ion-label>
-      </ion-item>
-      
-      <ion-item button detail="false" routerLink="/addPage" routerDirection="root">
-        <ion-icon slot="start" name="list-outline"></ion-icon>
-        <ion-label>Search plate</ion-label>
-      </ion-item>
-      <ion-item button detail="false" routerLink="/login" routerDirection="root">
-        <ion-icon slot="start" name="list-outline"></ion-icon>
-        <ion-label>Giriş yap</ion-label>
-      </ion-item>
-    </ion-list>
-  </ion-content>
-</ion-menu>
+
+
+
+
+
+
 
 <div class="ion-page" id="main-content">
   <ion-header>
@@ -136,23 +103,20 @@
     <ion-list lines="full">
       <ion-item *ngFor="let issue of carDetails.errorHistory">
         <ion-label class="ion-text-wrap">
-          <h3>{{ issue.partName }}</h3>
-          <p><strong>Tarih:</strong> {{ issue.dateReported | date:'dd/MM/yyyy HH:mm' }}</p>
-          <p><strong>Motor Tipi:</strong> {{ issue.engineType }}</p>
-          <p><strong>Model:</strong> {{ issue.model }}</p>
-          <p><strong>Açıklama:</strong> {{ issue.description }}</p>
-          <p>
-            <ion-badge [color]="issue.isReplaced ? 'success' : 'warning'">
-              {{ issue.isReplaced ? 'Tamir Edildi' : 'Tamir Bekliyor' }}
+          <div class="issue-item">
+            <p class="issue-date"><strong>Tarih:</strong> {{ issue.dateReported | date:'dd/MM/yyyy HH:mm' }}</p>
+            <p><strong>Arızalı Parça:</strong> {{ issue.partName }}</p>
+            <p><strong>Açıklama:</strong> {{ issue.description }}</p>
+            <ion-badge [color]="issue.isReplaced ? 'success' : 'warning'" class="status-badge">
+              {{ issue.isReplaced ? 'Parça değiştirildi' : 'Parça değiştirilmedi' }}
             </ion-badge>
-          </p>
+          </div>
         </ion-label>
       </ion-item>
     </ion-list>
+    
   </ion-card-content>
 </ion-card>
-
-    <!-- Hata Bulunamadı Durumu -->
     <ion-card *ngIf="!carDetails?.errorHistory?.length" class="error-history">
       <ion-card-header>
         <ion-card-title>Arıza Geçmişi</ion-card-title>

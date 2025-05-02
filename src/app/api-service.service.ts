@@ -159,11 +159,19 @@ addCar(car: CarWithoutValues): Observable<Car> {
     return this.http.get<newError>(`${this.apiUrl}/errors/GetErrorByName/${errorName}`, { headers });
   }
 
-  updateCar(car: Car): Observable<Car> {
+  updateCar(plateNumber: string, issues: any[]): Observable<any> {
     const headers = this.getAuthHeaders();
-    return this.http.put<Car>(`${this.apiUrl}/cars/updateCar`, car, { headers });
+    return this.http.patch(
+      `${this.apiUrl}/cars/UpdateCar/${plateNumber}`,
+      issues.map(issue => ({
+        partName: issue.PartName,
+        description: issue.Description,
+        isReplaced: issue.IsReplaced,
+        dateReported: issue.DateReported.toISOString()
+      })),
+      { headers }
+    );
   }
-
   deleteCar(id: number): Observable<void> {
     const headers = this.getAuthHeaders();
     return this.http.delete<void>(`${this.apiUrl}/cars/deleteCar/${id}`, { headers });

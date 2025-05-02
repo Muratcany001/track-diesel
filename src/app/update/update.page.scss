@@ -1,0 +1,79 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  background-color: #ffffff;
+  height: 100%;
+}
+
+/* Form alanları */
+ion-item {
+  margin-bottom: 12px;
+}
+
+/* Etiketler */
+ion-label {
+  font-size: 16px;
+  color: #333;
+}
+
+/* Buton */
+ion-button {
+  margin-top: 24px;
+  width: 100%;
+}
+
+/* Spinner hizalama */
+ion-spinner {
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+/* Bilgi ve hata mesajları */
+ion-text {
+  font-size: 14px;
+  text-align: center;
+  margin-top: 12px;
+}
+
+ion-text[color="danger"] {
+  color: var(--ion-color-danger);
+}
+
+ion-text[color="primary"] {
+  color: var(--ion-color-primary);
+}
+
+/* Kart görünümü */
+ion-card {
+  margin-top: 32px;
+  border-radius: 8px;
+  background-color: #f3f3f3;
+  padding: 8px;
+}
+
+ion-card-header {
+  padding: 12px;
+}
+
+ion-card-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #222;
+  text-align: center;
+}
+
+ion-card-subtitle {
+  font-size: 14px;
+  color: #666;
+  text-align: center;
+  margin-top: 4px;
+}
+
+/* Hatalı alanların kenarlığı */
+ion-input.ng-invalid.ng-touched,
+ion-textarea.ng-invalid.ng-touched,
+ion-datetime.ng-invalid.ng-touched {
+  border: 1px solid var(--ion-color-danger);
+  border-radius: 4px;
+}

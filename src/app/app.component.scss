@@ -1,0 +1,12 @@
+ion-menu {
+    --width: 280px;
+    
+    ion-toolbar {
+      --background: var(--ion-color-primary);
+      --color: white;
+    }
+  }
+  
+  ion-menu-button {
+    color: var(--ion-color-primary);
+  }

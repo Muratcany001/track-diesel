@@ -1,13 +1,84 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>update</ion-title>
+    <!-- Geri Butonu -->
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/main"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Ana sayfa</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Araç Güncelleme</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">update</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content [fullscreen]="true" class="ion-padding">
+
+  <form [formGroup]="updateForm" (ngSubmit)="updateCar()">
+    <ion-item>
+      <ion-label position="floating">Plaka Numarası</ion-label>
+      <ion-input formControlName="plateNumber"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Parça Adı</ion-label>
+      <ion-input formControlName="partName"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Açıklama</ion-label>
+      <ion-textarea formControlName="description"></ion-textarea>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Değiştirildi mi?</ion-label>
+      <ion-checkbox slot="start" formControlName="isReplaced"></ion-checkbox>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Bildirilen Tarih</ion-label>
+      <ion-datetime presentation="date" formControlName="dateReported"></ion-datetime>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Son Bakım Tarihi</ion-label>
+      <ion-datetime presentation="date" formControlName="lastMaintenanceDate"></ion-datetime>
+    </ion-item>
+
+    <ion-button expand="full" type="submit" [disabled]="isLoading">
+      <ion-spinner *ngIf="isLoading" name="dots"></ion-spinner>
+      <span *ngIf="!isLoading">Güncelle</span>
+    </ion-button>
+  </form>
+
+  <ion-text color="danger" *ngIf="updateForm.invalid && message">
+    <p class="ion-padding">{{ message }}</p>
+  </ion-text>
+
+  <ion-text color="primary" *ngIf="message && updateForm.valid">
+    <p class="ion-padding">{{ message }}</p>
+  </ion-text>
+
+  <ion-card *ngIf="carDetails.plateNumber">
+    <ion-card-header>
+      <ion-card-title>{{ carDetails.plateNumber }}</ion-card-title>
+      <ion-card-subtitle>Son Bakım: {{ carDetails.lastMaintenanceDate | date:'dd/MM/yyyy' }}</ion-card-subtitle>
+    </ion-card-header>
+  
+    <ion-card-content>
+      <ion-list>
+        <ion-item *ngFor="let issue of carDetails.errorHistory">
+          <ion-label>
+            <h3>Arıza Parçası: {{ issue.PartName }}</h3>
+            <p>Arıza Açıklaması: {{ issue.Description }}</p>
+            <p>Arıza Tarihi: {{ issue.dateReported | date:'dd/MM/yyyy HH:mm' }}</p>
+            <p>Parça değiştirildi mi? {{ issue.IsReplaced ? 'Evet' : 'Hayır' }}</p>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+  
+
 </ion-content>
