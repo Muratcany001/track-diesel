@@ -1,13 +1,48 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>delete</ion-title>
+    <!-- Geri Butonu -->
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/main"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Araç sil</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">delete</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
+  <ion-card>
+    <ion-card-content>
+      <form [formGroup]="carForm" (ngSubmit)="deleteCar()">
+        <ion-item>
+          <ion-label position="floating">Plaka Numarası</ion-label>
+          <ion-input 
+            type="text"
+            position="floating" 
+            formControlName="plateNumber"
+            placeholder="Örnek: 34ABC123">
+          </ion-input>
+        </ion-item>
+        <ion-text color="danger" *ngIf="carForm.get('plateNumber')?.invalid && 
+                                      (carForm.get('plateNumber')?.dirty || carForm.get('plateNumber')?.touched)">
+          <p class="ion-padding-start">Plaka numarası zorunludur</p>
+        </ion-text>
+        <ion-button 
+          type="submit" 
+          expand="block" 
+          color="primary"
+          [disabled]="carForm.invalid || loading"
+          class="ion-margin-top">
+          <ion-spinner *ngIf="loading" name="crescent"></ion-spinner>
+          {{ loading ? 'Siliniyor...' : 'Aracı Sil' }}
+        </ion-button>
+      </form>
+    </ion-card-content>
+  </ion-card>
+  <ion-grid *ngIf="loading">
+    <ion-row class="ion-justify-content-center ion-margin-top">
+      <ion-col size="12" class="ion-text-center custom-loading">
+        <ion-spinner name="lines" color="primary"></ion-spinner>
+        <p class="loading-text">İşlem yapılıyor, lütfen bekleyin...</p>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
