@@ -29,6 +29,10 @@ const routes: Routes = [
   {
     path: 'delete',
     loadChildren: () => import('./delete/delete.module').then(m=> m.DeletePageModule)
+  },
+  {
+    path: 'errorPage',
+    loadChildren:() => import('./tab2/tab2.module').then(m=>m.Tab2PageModule)
   }
 ];
 @NgModule({
