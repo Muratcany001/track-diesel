@@ -1,0 +1,102 @@
+<ion-header>
+  <ion-toolbar>
+    <!-- Geri Butonu -->
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/main"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Tüm araçlarım</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="car-container">
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-message ion-text-center ion-padding">
+    <ion-spinner name="crescent" color="primary"></ion-spinner>
+    <p>Veriler yükleniyor...</p>
+  </div>
+
+  <!-- Vehicle List -->
+  <div *ngIf="!isLoading">
+    <!-- Empty State -->
+    <div *ngIf="cars.length === 0" class="no-cars-message ion-text-center">
+      <ion-icon name="car-sport" size="large"></ion-icon>
+      <p>Henüz kayıtlı araç bulunmamaktadır.</p>
+    </div>
+
+    <!-- Vehicle Grid -->
+    <div *ngIf="cars.length > 0" class="car-grid">
+      <ion-card *ngFor="let car of cars" class="car-card">
+        <div class="car-header">
+          <h3>{{ car.name }}</h3>
+          <span class="plate-badge">{{ car.plate }}</span>
+        </div>
+
+        <ion-card-content>
+          <div class="car-details">
+            <div class="detail-item">
+              <span class="detail-label">Yaş:</span>
+              <span class="detail-value">{{ car.age }} yıl</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Son Bakım:</span>
+              <span class="detail-value">
+                {{ car.lastMaintenanceDate ? (car.lastMaintenanceDate | date: 'dd/MM/yyyy') : 'Kayıt yok' }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Issues Section -->
+          <div *ngIf="car.issues && car.issues.length > 0" class="issues-section">
+            <h4 class="issues-title">Hata Geçmişi</h4>
+            <div class="issues-list">
+              <ion-item *ngFor="let issue of car.issues" class="issue-card" [class.replaced]="issue.isReplaced" detail>
+                <ion-label>
+                  <h3>{{ issue.partName || 'Belirtilmemiş' }}</h3>
+                  <p>{{ issue.description || 'Açıklama yok' }}</p>
+                  <div class="issue-footer">
+                    <span class="issue-date">{{ issue.dateReported | date: 'dd/MM/yyyy' }}</span>
+                    <span class="issue-status">
+                      {{ issue.isReplaced ? '✓ Çözüldü' : '⚠ Onarım Bekliyor' }}
+                    </span>
+                  </div>
+                </ion-label>
+              </ion-item>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
+
+  <!-- Info Panel -->
+  <ion-card class="Info-Container">
+    <ion-card-header class="header">
+      <ion-card-subtitle>*Bilgi paneli*</ion-card-subtitle>
+    </ion-card-header>
+
+    <ion-card-content>
+      <div class="problem-info-header">
+        <p>Sık karşılaşılan problemler</p>
+        <div class="problem-info-panel">
+          <ion-item *ngFor="let problem of CommonProblems">
+            <ion-label>{{ problem.description }}</ion-label>
+            <ion-badge slot="end">{{ problem.count }}</ion-badge>
+          </ion-item>
+        </div>
+      </div>
+
+      <div class="broken-part-info-header">
+        <p>En çok arıza çıkartan parçalar</p>
+        <div class="broken-part-info-panel">
+          <ion-item *ngFor="let brokenPart of MostBrokenParts">
+            <ion-label>
+              <h3>{{ brokenPart.model }} - {{ brokenPart.engineType }}</h3>
+              <p>{{ brokenPart.partName }}</p>
+            </ion-label>
+            <ion-badge slot="end">{{ brokenPart.count }}</ion-badge>
+          </ion-item>
+        </div>
+      </div>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

@@ -9,16 +9,16 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
   selector: 'app-main',
   templateUrl: './main.page.html',
   styleUrls: ['./main.page.scss'],
-  standalone: false,  // standalone false
+  standalone: false,
 })
 export class MainPage implements OnInit {
-  addForm: FormGroup;  // Plaka formu
-  errorForm: FormGroup;  // Arıza kodu formu
-  carDetails: any = {};  // Araç detayları
-  message: string = '';  // Mesajları tutan değişken
-  code: string = '';  // Arıza kodu
-  description: string = '';  // Arıza açıklaması
-  isSuccess: boolean = false;  // İşlem sonucu durumu
+  addForm: FormGroup;
+  errorForm: FormGroup;
+  carDetails: any = {};
+  message: string = '';
+  code: string = '';
+  description: string = '';
+  isSuccess: boolean = false;
 
   constructor(
     private navCtrl: NavController,
@@ -26,7 +26,6 @@ export class MainPage implements OnInit {
     private formBuilder: FormBuilder,
     private httpClient: HttpClient
   ) {
-    // Formlar
     this.addForm = this.formBuilder.group({
       plateNumber: ['', Validators.required],
     });
@@ -37,8 +36,6 @@ export class MainPage implements OnInit {
   }
 
   ngOnInit(): void {}
-
-  // Plaka sorgulama
   searchPlate(): void {
     if (this.addForm.invalid) {
       return;

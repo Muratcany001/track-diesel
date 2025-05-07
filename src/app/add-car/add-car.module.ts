@@ -8,6 +8,7 @@ import { AddCarPageRoutingModule } from './add-car-routing.module';
 
 import { AddCarPage } from './add-car.page';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   imports: [
@@ -17,6 +18,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
     AddCarPageRoutingModule,
     ReactiveFormsModule,
     HttpClientModule,
+    RouterModule
   ],
   declarations:[AddCarPage]
 })
