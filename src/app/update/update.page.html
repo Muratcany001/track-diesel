@@ -14,51 +14,155 @@
 </ion-header>
 
 <ion-content [fullscreen]="true" class="ion-padding">
+  <ion-text color="primary" *ngIf="message && updateForm.valid">
+    <p class="ion-padding">{{ message }}</p>
+  </ion-text>
+  <ion-text color="danger" *ngIf="message && !updateForm.valid">
+    <p class="ion-padding">{{ message }}</p>
+  </ion-text>
 
   <form [formGroup]="updateForm" (ngSubmit)="updateCar()">
+    <!-- Plaka -->
     <ion-item>
       <ion-label position="floating">Plaka Numarası</ion-label>
-      <ion-input formControlName="plateNumber"></ion-input>
+      <ion-input type="text" formControlName="plateNumber" placeholder="Araç plakası girin"></ion-input>
     </ion-item>
+    <ion-text color="danger" *ngIf="updateForm.get('plateNumber')?.invalid && updateForm.get('plateNumber')?.touched">
+      <p class="ion-padding-start">Plaka numarası gereklidir</p>
+    </ion-text>
 
+    <!-- Parça Adı -->
     <ion-item>
       <ion-label position="floating">Parça Adı</ion-label>
-      <ion-input formControlName="partName"></ion-input>
+      <ion-select formControlName="partName" placeholder="Arızalı parçayı seçin">
+        <ion-select-option value="enjektör">Enjektör</ion-select-option>
+        <ion-select-option value="Turbo">Turbo</ion-select-option>
+        <ion-select-option value="Sensör">Sensör</ion-select-option>
+        <ion-select-option value="Pompa">Pompa</ion-select-option>
+        <ion-select-option value="Bilinmeyen arıza">Bilinmeyen arıza</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-text color="danger" *ngIf="updateForm.get('partName')?.invalid && updateForm.get('partName')?.touched">
+      <p class="ion-padding-start">Parça adı gereklidir</p>
+    </ion-text>
+
+    <!-- Parça Değiştirildi mi -->
+    <ion-item>
+      <ion-label>Parça Değiştirildi mi?</ion-label>
+      <ion-checkbox slot="start" formControlName="isReplaced" (ionChange)="onPartReplacedChange($event.detail.checked)"></ion-checkbox>
     </ion-item>
 
+    <!-- Parça seçimi veya manuel girişi -->
+    <div *ngIf="updateForm.get('isReplaced')?.value" class="part-selection-panel">
+      <ion-item>
+        <ion-label position="stacked">Parça Bilgileri</ion-label>
+        
+        <!-- Parça Adı Girişi ve Otomatik Tamamlama -->
+        <ion-item>
+          <ion-label position="stacked">Parça Adı</ion-label>
+          <ion-input
+            type="text"
+            formControlName="partName"
+            placeholder="Parça adını giriniz"
+            (ionInput)="onPartSearch($event)"
+            [readonly]="selectedPart !== null">
+          </ion-input>
+        </ion-item>
+        
+        <!-- Otomatik Tamamlama Listesi -->
+        <div *ngIf="filteredParts.length > 0 && !selectedPart" class="autocomplete-list">
+          <ion-list>
+            <ion-item *ngFor="let part of filteredParts" (click)="selectPart(part)" class="autocomplete-item">
+              <ion-label>
+                <span class="part-name">{{ part.name }}</span>
+                <span class="part-stock">(Stok: {{ part.count }} adet)</span>
+              </ion-label>
+            </ion-item>
+          </ion-list>
+        </div>
+        
+        <div *ngIf="filteredParts.length === 0 && updateForm.get('partName')?.value && !selectedPart" class="no-parts-message">
+          Bu parça sistemde kayıtlı değil. Lütfen başka bir parça adı giriniz.
+        </div>
+      </ion-item>
+
+      <!-- Parça Miktarı Girişi -->
+      <ion-item *ngIf="selectedPart">
+        <ion-label position="stacked">Kullanılacak Adet</ion-label>
+        <ion-input
+          type="number"
+          formControlName="quantity"
+          placeholder="Kullanılacak parça adedini giriniz"
+          min="1"
+          [max]="selectedPart.count"
+          (ionChange)="validateQuantity()">
+        </ion-input>
+        <div class="stock-info">
+          Stokta {{ selectedPart.count }} adet bulunmaktadır.
+        </div>
+      </ion-item>
+
+      <!-- Parça Seçimini Sıfırlama Butonu -->
+      <ion-button *ngIf="selectedPart" expand="block" color="medium" (click)="resetPartSelection()" type="button">
+        Parça Seçimini Sıfırla
+      </ion-button>
+    </div>
+
+    <!-- Açıklama -->
     <ion-item>
       <ion-label position="floating">Açıklama</ion-label>
-      <ion-textarea formControlName="description"></ion-textarea>
+      <ion-select formControlName="description" placeholder="Açıklama seçin">
+        <ion-select-option value="enjektör arızası">Enjektör arızası</ion-select-option>
+        <ion-select-option value="yakıt pompası arızası">Yakıt pompası arızası</ion-select-option>
+        <ion-select-option value="turbo arızası">Turbo arızası</ion-select-option>
+        <ion-select-option value="partikül filtresi (DPF) tıkanıklığı">Partikül filtresi (DPF) tıkanıklığı</ion-select-option>
+        <ion-select-option value="EGR valfi arızası">EGR valfi arızası</ion-select-option>
+        <ion-select-option value="hava akışmetre (MAF) sensörü arızası">Hava akışmetre (MAF) sensörü arızası</ion-select-option>
+        <ion-select-option value="yakıt filtresi tıkanması">Yakıt filtresi tıkanması</ion-select-option>
+        <ion-select-option value="soğutma sistemi arızası">Soğutma sistemi arızası</ion-select-option>
+        <ion-select-option value="motor beyni (ECU) arızası">Motor beyni (ECU) arızası</ion-select-option>
+        <ion-select-option value="krank sensörü arızası">Krank sensörü arızası</ion-select-option>
+        <ion-select-option value="kam mili sensörü arızası">Kam mili sensörü arızası</ion-select-option>
+        <ion-select-option value="ısıtma bujileri (glow plug) arızası">Isıtma bujileri (glow plug) arızası</ion-select-option>
+        <ion-select-option value="egzoz basınç sensörü arızası">Egzoz basınç sensörü arızası</ion-select-option>
+        <ion-select-option value="yakıt enjektör geri dönüş sızıntısı">Yakıt enjektör geri dönüş sızıntısı</ion-select-option>
+        <ion-select-option value="common rail sistem basınç düşüklüğü">Common rail sistem basınç düşüklüğü</ion-select-option>
+        <ion-select-option value="yakıt hattı hava yapması">Yakıt hattı hava yapması</ion-select-option>
+        <ion-select-option value="motor yağ basınç sensörü arızası">Motor yağ basınç sensörü arızası</ion-select-option>
+        <ion-select-option value="soğukta zor çalışma">Soğukta zor çalışma</ion-select-option>
+        <ion-select-option value="rölanti dalgalanması">Rölanti dalgalanması</ion-select-option>
+        <ion-select-option value="beyaz/siyah egzoz dumanı">Beyaz/siyah egzoz dumanı</ion-select-option>
+        <ion-select-option value="bilinmeyen arıza">Bilinmeyen arıza</ion-select-option>
+      </ion-select>
     </ion-item>
+    <ion-text color="danger" *ngIf="updateForm.get('description')?.invalid && updateForm.get('description')?.touched">
+      <p class="ion-padding-start">Açıklama gereklidir</p>
+    </ion-text>
 
+    <!-- Bildirim Tarihi -->
     <ion-item>
-      <ion-label>Değiştirildi mi?</ion-label>
-      <ion-checkbox slot="start" formControlName="isReplaced"></ion-checkbox>
-    </ion-item>
-
-    <ion-item>
-      <ion-label position="floating">Bildirilen Tarih</ion-label>
+      <ion-label position="floating">Bildirim Tarihi</ion-label>
       <ion-datetime presentation="date" formControlName="dateReported"></ion-datetime>
     </ion-item>
+    <ion-text color="danger" *ngIf="updateForm.get('dateReported')?.invalid && updateForm.get('dateReported')?.touched">
+      <p class="ion-padding-start">Bildirim tarihi gereklidir</p>
+    </ion-text>
 
+    <!-- Son Bakım Tarihi -->
     <ion-item>
       <ion-label position="floating">Son Bakım Tarihi</ion-label>
       <ion-datetime presentation="date" formControlName="lastMaintenanceDate"></ion-datetime>
     </ion-item>
+    <ion-text color="danger" *ngIf="updateForm.get('lastMaintenanceDate')?.invalid && updateForm.get('lastMaintenanceDate')?.touched">
+      <p class="ion-padding-start">Son bakım tarihi gereklidir</p>
+    </ion-text>
 
-    <ion-button expand="full" type="submit" [disabled]="isLoading">
+    <!-- Gönder Butonu -->
+    <ion-button expand="block" type="submit" [disabled]="updateForm.invalid || isLoading">
       <ion-spinner *ngIf="isLoading" name="dots"></ion-spinner>
       <span *ngIf="!isLoading">Güncelle</span>
     </ion-button>
   </form>
-
-  <ion-text color="danger" *ngIf="updateForm.invalid && message">
-    <p class="ion-padding">{{ message }}</p>
-  </ion-text>
-
-  <ion-text color="primary" *ngIf="message && updateForm.valid">
-    <p class="ion-padding">{{ message }}</p>
-  </ion-text>
 
   <ion-card *ngIf="carDetails.plateNumber">
     <ion-card-header>

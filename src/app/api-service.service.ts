@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, tap, throwError } from 'rxjs';
+import { Observable, catchError, map, tap, throwError } from 'rxjs';
 
 interface LoginRequest {
   id: number;
@@ -12,11 +12,42 @@ interface LoginRequest {
 interface LoginResponse {
   token: string;
 }
-export interface newError{
+
+export interface Stock {
   id?: number;
-  code:string;
-  description:string;
+  count: number;
+  userId?: number;
 }
+
+export interface Part {
+  id?: number;
+  name: string;
+  description?: string;
+  count: number;
+  state: string;
+  userId?: string;
+}
+
+export interface newError {
+  id?: number;
+  code: string;
+  description?: string;
+}
+
+export interface WorstCars {
+  id?: number;
+  model: String;
+  partName: String;
+  count: number;
+  userId: String;
+}
+
+export interface updateIssues {
+  PartName: String;
+  description?: string;
+  DateReported: Date;
+}
+
 export interface Car {
   id?: number;
   plate: string;
@@ -24,36 +55,45 @@ export interface Car {
   age: number;
   errorHistory?: { $values: Issue[] };
   lastMaintenanceDate: Date | string;
-  userId: string;
+  userId: String;
 }
+
 export interface CarWithoutValues {
   id?: number;
   plate: string;
   name: string;
   age: number;
-  errorHistory: Issue[]; // Direkt dizi
+  errorHistory: Issue[];
   lastMaintenanceDate: Date | string;
   userId: string;
+  car: {}
 }
+
 interface ApiResponse {
   $id: string;
   $values: Array<{
     $id: string;
-    description: string;
+    description?: string;
     userId: string;
+    dateReported: Date | string;
+    lastMaintenanceDate: Date | string;
     count: number;
   }>;
 }
+
 interface ApiResponse2 {
   $id: string;
   $values: Array<{
     $id: string;
-    model:string;
-    engineType:string;
-    partName:string;
-    count:number;
+    model: string;
+    engineType: string;
+    partName: string;
+    dateReported: string;
+    lastMaintenanceDate: Date | string;
+    count: number;
   }>;
 }
+
 export interface Issue {
   id?: number;
   model?: string;
@@ -63,12 +103,14 @@ export interface Issue {
   dateReported?: Date | string;
   isReplaced: boolean;
   carId?: number;
+  partId?: number;
+  count?: number;
 }
+
 @Injectable({
   providedIn: 'root'
 })
 export class ApiServiceService {
-
   private apiUrl = "https://localhost:7029";
   private headers = new HttpHeaders({
     'Content-Type': 'application/json',
@@ -132,46 +174,52 @@ export class ApiServiceService {
     });
   }
 
-  // In api.service.ts
-addCar(car: CarWithoutValues): Observable<Car> {
-  const headers = this.getAuthHeaders();
-  
-  // Debug için log
-  console.log('API Request Payload:', JSON.stringify(car, null, 2));
-  
-  return this.http.post<Car>(`${this.apiUrl}/cars/AddCar`, car, { 
-    headers: headers,
-    withCredentials: true
-  }).pipe(
-    catchError(error => {
-      console.error('API Hatası Detayları:', {
-        status: error.status,
-        message: error.message,
-        error: error.error
-      });
-      return throwError(() => error);
-    })
-  );
-}
-
+  addCar(car: CarWithoutValues): Observable<Car> {
+    const headers = this.getAuthHeaders();
+    console.log('API Request Payload:', JSON.stringify(car, null, 2));
+    
+    return this.http.post<Car>(`${this.apiUrl}/cars/AddCar`, car, { 
+      headers: headers,
+      withCredentials: true
+    }).pipe(
+      map(response => {
+        if (response.errorHistory && !response.errorHistory.$values) {
+          response.errorHistory = { $values: response.errorHistory as any };
+        }
+        return response;
+      }),
+      catchError(error => {
+        console.error('API Hatası Detayları:', {
+          status: error.status,
+          message: error.message,
+          error: error.error,
+          validationErrors: error.error?.errors,
+          title: error.error?.title
+        });
+        return throwError(() => error);
+      })
+    );
+  }
 
   getCars(): Observable<Car[]> {
     const headers = this.getAuthHeaders();
     return this.http.get<Car[]>(`${this.apiUrl}/cars/GetAll`, { headers });
   }
-  
+
   addError(error: newError): Observable<newError> {
     const headers = this.getAuthHeaders();
     return this.http.post<newError>(`${this.apiUrl}/errors/AddError`, error, { headers });
   }
-  logOut(){
+
+  logOut() {
     const token = localStorage.getItem('token');
-    if (!token){
+    if (!token) {
       return;
     }
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}` )
-    return this.http.post(`${this.apiUrl}/api/auth/logout`, {}, {headers} )
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
+    return this.http.post(`${this.apiUrl}/api/auth/logout`, {}, { headers })
   }
+
   getError(errorName: string): Observable<newError> {
     const headers = this.getAuthHeaders();
     return this.http.get<newError>(`${this.apiUrl}/errors/GetErrorByName/${errorName}`, { headers });
@@ -182,38 +230,130 @@ addCar(car: CarWithoutValues): Observable<Car> {
     return this.http.patch(
       `${this.apiUrl}/cars/UpdateCar/${plateNumber}`,
       issues.map(issue => ({
-        partName: issue.PartName,
-        description: issue.Description,
-        isReplaced: issue.IsReplaced,
-        dateReported: issue.DateReported.toISOString()
+        partName: issue.partName,
+        description: issue.description,
+        isReplaced: issue.isReplaced,
+        dateReported: issue.dateReported,
+        lastMaintenanceDate: issue.lastMaintenanceDate,
+        partId: issue.partId,
+        count: issue.count
       })),
       { headers }
     );
   }
-  deleteCar(id: number): Observable<void> {
+
+  getCarsAll() {
     const headers = this.getAuthHeaders();
-    return this.http.delete<void>(`${this.apiUrl}/cars/deleteCar/${id}`, { headers });
+    return this.http.get<Car[]>(`${this.apiUrl}/cars/GetAll`, { headers });
+  }
+
+  deleteCar(plate: string): Observable<void> {
+    const headers = this.getAuthHeaders();
+    return this.http.delete<void>(`${this.apiUrl}/cars/deleteCar/${plate}`, { headers });
   }
 
   getCarCount(): Observable<number> {
     const headers = this.getAuthHeaders();
-    return this.http.get<number>(`${this.apiUrl}/cars/count`, { headers });
+    return this.http.get<number>(`${this.apiUrl}/cars/GetCarCount`, { headers });
   }
 
   getCarByPlate(plate: string): Observable<Car> {
     const headers = this.getAuthHeaders();
     return this.http.get<Car>(`${this.apiUrl}/cars/GetCarByPlate/${plate}`, { headers });
   }
-  GetModelsWithBrokenParts(): Observable<ApiResponse2>{
+
+  GetModelsWithBrokenParts(): Observable<ApiResponse2> {
     const headers = this.getAuthHeaders();
     return this.http.get<ApiResponse2>(`${this.apiUrl}/cars/GetModelsWithBrokenParts`, { headers });
   }
-  MostCommonProblems(): Observable<ApiResponse>{
-    const headers=this.getAuthHeaders();
+
+  MostCommonProblems(): Observable<ApiResponse> {
+    const headers = this.getAuthHeaders();
     return this.http.get<ApiResponse>(`${this.apiUrl}/cars/MostCommonProblems`, { headers });
   }
+
   getAllIssues(): Observable<any[]> {
     const headers = this.getAuthHeaders();
     return this.http.get<any[]>(`${this.apiUrl}/cars/issues`, { headers });
+  }
+
+  addPart(part: Part): Observable<Part> {
+    return this.http.post<Part>(
+      `${this.apiUrl}/parts/AddParts`,
+      part,
+      { headers: this.getAuthHeaders() }
+    );
+  }
+
+  getAllParts(): Observable<Part[]> {
+    return this.http.get<Part[]>(
+      `${this.apiUrl}/parts/GetAllParts`,
+      { headers: this.getAuthHeaders() }
+    );
+  }
+
+  getPartById(id: number): Observable<Part> {
+    return this.http.get<Part>(
+      `${this.apiUrl}/parts/GetPartById/${id}`,
+      { headers: this.getAuthHeaders() }
+    );
+  }
+
+  searchPartsByName(name: string): Observable<Part[]> {
+    return this.http.get<Part[]>(
+      `${this.apiUrl}/parts/GetPartByName/${name}`,
+      { headers: this.getAuthHeaders() }
+    );
+  }
+
+  updatePart(id: number, partialData: { count?: number, state?: string }): Observable<Part> {
+    console.log('API Service - Updating part:', { id, partialData });
+    
+    const requestData = {
+      id: id,
+      name: "string",
+      description: "string",
+      count: partialData.count || 0,
+      state: partialData.state || "active",
+      userId: "string"
+    };
+    
+    console.log('API Request Data:', requestData);
+    
+    return this.http.patch<Part>(
+      `${this.apiUrl}/parts/UpdateStockAsync/${id}`,
+      requestData,
+      { headers: this.getAuthHeaders() }
+    ).pipe(
+      tap(response => console.log('API Response:', response))
+    );
+  }
+
+  deletePart(id: number): Observable<void> {
+    return this.http.delete<void>(
+      `${this.apiUrl}/parts/DeletePart/${id}`,
+      { headers: this.getAuthHeaders() }
+    );
+  }
+
+  addBulkParts(parts: Part[]): Observable<string> {
+    return this.http.post<string>(
+      `${this.apiUrl}/parts/AddBulkParts`,
+      parts,
+      { headers: this.getAuthHeaders() }
+    );
+  }
+
+  updateStock(id: number, count: number): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/parts/UpdateStockAsync/${id}`,
+      {
+        id: id,
+        count: count,
+        name: '',
+        description: '',
+        userId: ''
+      },
+      { headers: this.getAuthHeaders() }
+    );
   }
 }
