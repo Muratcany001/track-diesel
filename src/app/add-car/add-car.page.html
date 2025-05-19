@@ -1,34 +1,36 @@
 <ion-content>
   <ion-card>
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/main"></ion-back-button>
-    </ion-buttons>
     <ion-card-header>
-      <ion-card-title>Araç Ekle</ion-card-title>
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-back-button defaultHref="/main" text="Geri" icon="arrow-back"></ion-back-button>
+        </ion-buttons>
+        <ion-title>Araç Ekle</ion-title>
+      </ion-toolbar>
     </ion-card-header>
     <ion-card-content>
       <form [formGroup]="carForm" (ngSubmit)="addCar()">
         <!-- Car alanları -->
         <ion-item>
-          <ion-label position="floating">Müşteri bilgileri</ion-label>
+          <ion-label position="stacked">Müşteri bilgileri</ion-label>
           <ion-input type="text" formControlName="carName" placeholder="Müşteri bilgisi girin..."></ion-input>
         </ion-item>
         <ion-item>
-          <ion-label position="floating">Araç yaşı</ion-label>
+          <ion-label position="stacked">Araç yaşı</ion-label>
           <ion-input type="number" formControlName="carAge" placeholder="Araç yaşını girin..." required></ion-input>
         </ion-item>
         <ion-item>
-          <ion-label position="floating">Araç plakası</ion-label>
+          <ion-label position="stacked">Araç plakası</ion-label>
           <ion-input type="text" formControlName="carPlate" placeholder="Araç plakası girin..."></ion-input>
         </ion-item>
         <ion-item>
-          <ion-label position="floating">Son Bakım Tarihi</ion-label>
+          <ion-label position="stacked">Son Bakım Tarihi</ion-label>
           <ion-datetime display-format="DD/MM/YYYY HH:mm" formControlName="lastMaintenanceDate"></ion-datetime>
         </ion-item>
 
         <!-- Issue (errorHistory) alanları -->
         <ion-item>
-          <ion-label position="floating">Model</ion-label>
+          <ion-label position="stacked">Model</ion-label>
           <ion-select formControlName="model" interface="popover">
             <ion-select-option value="Belirtilmeyen araç">Araç listede yok</ion-select-option>
             <ion-select-option disabled>*********************Wolskwagen serisi*********************</ion-select-option>
@@ -52,14 +54,14 @@
           </ion-select>
         </ion-item>
         <ion-item>
-          <ion-label position="floating">Motor Tipi</ion-label>
+          <ion-label position="stacked">Motor Tipi</ion-label>
           <ion-select formControlName="engineType" interface="popover">
-            <ion-select-option value="dizel">dizel</ion-select-option>
-            <ion-select-option value="benzin">benzin</ion-select-option>
+            <ion-select-option value="dizel">Dizel</ion-select-option>
+            <ion-select-option value="benzin">Benzin</ion-select-option>
           </ion-select>
         </ion-item>
         <ion-item>
-          <ion-label position="floating">Parça Adı</ion-label>
+          <ion-label position="stacked">Parça Adı</ion-label>
           <ion-select formControlName="partName" interface="popover">
             <ion-select-option value="enjektör">Enjektör</ion-select-option>
             <ion-select-option value="Turbo">Turbo</ion-select-option>
@@ -69,7 +71,7 @@
           </ion-select>
         </ion-item>
         <ion-item>
-          <ion-label position="floating">Arıza Açıklaması</ion-label>
+          <ion-label position="stacked">Arıza Açıklaması</ion-label>
           <ion-select formControlName="description" interface="popover">
             <ion-select-option value="enjektör arızası">Enjektör arızası</ion-select-option>
             <ion-select-option value="yakıt pompası arızası">Yakıt pompası arızası</ion-select-option>
@@ -95,7 +97,7 @@
           </ion-select>
         </ion-item>
         <ion-item>
-          <ion-label position="floating">Parça Değiştirildi mi?</ion-label>
+          <ion-label position="stacked">Parça Değiştirildi mi?</ion-label>
           <ion-select formControlName="isReplaced" interface="popover">
             <ion-select-option value="true">Evet</ion-select-option>
             <ion-select-option value="false">Hayır</ion-select-option>
@@ -105,7 +107,7 @@
         <!-- Parça seçimi veya manuel girişi -->
         <div *ngIf="carForm.get('isReplaced')?.value === 'true'" class="part-selection-panel">
           <ion-item>
-            <ion-label position="floating">Parça Adı</ion-label>
+            <ion-label position="stacked">Parça Adı</ion-label>
             <ion-input
               type="text"
               formControlName="partName"
@@ -132,7 +134,7 @@
           </div>
           <div *ngIf="selectedPart">
             <ion-item>
-              <ion-label position="floating">Kullanılacak Adet</ion-label>
+              <ion-label position="stacked">Kullanılacak Adet</ion-label>
               <ion-input
                 type="number"
                 formControlName="quantity"
@@ -155,7 +157,7 @@
         </div>
 
         <ion-item>
-          <ion-label position="floating">Arıza Tarihi</ion-label>
+          <ion-label position="stacked">Arıza Tarihi</ion-label>
           <ion-datetime display-format="DD/MM/YYYY HH:mm" formControlName="dateReported"></ion-datetime>
         </ion-item>
         <ion-button expand="block" type="submit" [disabled]="carForm.invalid || loading">Araç Ekle</ion-button>

@@ -10,7 +10,7 @@
           <ion-card-content>
             <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
               <ion-item>
-                <ion-label position="floating">Kullanıcı Adı</ion-label>
+                <ion-label position="flex">Kullanıcı Adı</ion-label>
                 <ion-input 
                   type="text" 
                   formControlName="name"
@@ -19,7 +19,7 @@
               </ion-item>
 
               <ion-item>
-                <ion-label position="floating">Şifre</ion-label>
+                <ion-label position="flex">Şifre</ion-label>
                 <ion-input 
                   type="password" 
                   formControlName="password"
