@@ -61,8 +61,8 @@
           </ion-select>
         </ion-item>
         <ion-item>
-          <ion-label position="stacked">Parça Adı</ion-label>
-          <ion-select formControlName="partName" interface="popover">
+          <ion-label position="stacked">Arızalı Parça Adı</ion-label>
+          <ion-select formControlName="faultyPartName" placeholder="Arızalı parçayı seçin">
             <ion-select-option value="enjektör">Enjektör</ion-select-option>
             <ion-select-option value="Turbo">Turbo</ion-select-option>
             <ion-select-option value="Sensör">Sensör</ion-select-option>
@@ -103,57 +103,60 @@
             <ion-select-option value="false">Hayır</ion-select-option>
           </ion-select>
         </ion-item>
-
         <!-- Parça seçimi veya manuel girişi -->
-        <div *ngIf="carForm.get('isReplaced')?.value === 'true'" class="part-selection-panel">
+        <div *ngIf="carForm.get('isReplaced')?.value" class="part-selection-panel">
           <ion-item>
-            <ion-label position="stacked">Parça Adı</ion-label>
-            <ion-input
-              type="text"
-              formControlName="partName"
-              placeholder="Parça adını giriniz"
-              (ionInput)="onPartSearch($event)"
-              [readonly]="selectedPart !== null">
-            </ion-input>
-          </ion-item>
-          <div *ngIf="filteredParts.length > 0 && !selectedPart" class="autocomplete-list">
-            <ion-list>
-              <ion-item *ngFor="let part of filteredParts" (click)="selectPart(part)">
-                <ion-label>
-                  <span class="part-name">{{ part.name }}</span>
-                  <span class="part-stock">(Stok: {{ part.count }} adet)</span>
-                </ion-label>
-              </ion-item>
-            </ion-list>
-          </div>
-          <div *ngIf="filteredParts.length === 0 && carForm.get('partName')?.value && !selectedPart" class="no-parts-message">
-            Bu parça sistemde kayıtlı değil. Lütfen başka bir parça adı giriniz.
-          </div>
-          <div *ngIf="carForm.get('partName')?.invalid && carForm.get('partName')?.touched" class="error-message">
-            Parça adı gereklidir.
-          </div>
-          <div *ngIf="selectedPart">
+            <ion-label position="stacked">Parça Bilgileri</ion-label>
+            
+            <!-- Parça Adı Girişi ve Otomatik Tamamlama -->
             <ion-item>
-              <ion-label position="stacked">Kullanılacak Adet</ion-label>
+              <ion-label position="stacked">Stoktan Seçilecek Parça</ion-label>
               <ion-input
-                type="number"
-                formControlName="quantity"
-                placeholder="Kullanılacak parça adedini giriniz"
-                min="1"
-                [max]="selectedPart.count"
-                (ionChange)="validateQuantity()">
+                type="text"
+                formControlName="stockPartName"
+                placeholder="Parça ara..."
+                (ionInput)="onPartSearch($event)"
+                [readonly]="selectedPart !== null">
               </ion-input>
             </ion-item>
+            
+            <!-- Otomatik Tamamlama Listesi -->
+            <div *ngIf="filteredParts.length > 0 && !selectedPart" class="autocomplete-list">
+              <ion-list>
+                <ion-item *ngFor="let part of filteredParts" (click)="selectPart(part)" class="autocomplete-item">
+                  <ion-label>
+                    <span class="part-name">{{ part.name }}</span>
+                    <span class="part-stock">(Stok: {{ part.count }} adet)</span>
+                  </ion-label>
+                </ion-item>
+              </ion-list>
+            </div>
+            
+            <div *ngIf="filteredParts.length === 0 && carForm.get('stockPartName')?.value && !selectedPart" class="no-parts-message">
+              Bu parça sistemde kayıtlı değil. Lütfen başka bir parça adı giriniz.
+            </div>
+          </ion-item>
+
+          <!-- Parça Miktarı Girişi -->
+          <ion-item *ngIf="selectedPart">
+            <ion-label position="stacked">Kullanılacak Adet</ion-label>
+            <ion-input
+              type="number"
+              formControlName="quantity"
+              placeholder="Kullanılacak parça adedini giriniz"
+              min="1"
+              [max]="selectedPart.count"
+              (ionChange)="validateQuantity()">
+            </ion-input>
             <div class="stock-info">
               Stokta {{ selectedPart.count }} adet bulunmaktadır.
             </div>
-            <div *ngIf="carForm.get('quantity')?.invalid && carForm.get('quantity')?.touched" class="error-message">
-              Geçerli bir miktar giriniz.
-            </div>
-            <ion-button expand="block" color="medium" (click)="resetPartSelection()" type="button">
-              Parça Seçimini Sıfırla
-            </ion-button>
-          </div>
+          </ion-item>
+
+          <!-- Parça Seçimini Sıfırlama Butonu -->
+          <ion-button *ngIf="selectedPart" expand="block" color="medium" (click)="resetPartSelection()" type="button">
+            Parça Seçimini Sıfırla
+          </ion-button>
         </div>
 
         <ion-item>

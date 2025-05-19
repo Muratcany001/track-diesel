@@ -45,7 +45,8 @@ export class AddCarPage implements OnInit {
       lastMaintenanceDate: new FormControl('', Validators.required),
       model: new FormControl('', Validators.required),
       engineType: new FormControl('', Validators.required),
-      partName: new FormControl({value: '', disabled: false}, Validators.required),
+      faultyPartName: new FormControl({value: '', disabled: false}, Validators.required),
+      stockPartName: new FormControl({value: '', disabled: false}, Validators.required),
       description: new FormControl('', Validators.required),
       dateReported: new FormControl('', Validators.required),
       isReplaced: new FormControl('false', Validators.required),
@@ -54,19 +55,16 @@ export class AddCarPage implements OnInit {
   }
   
   onPartReplacedChange(isReplaced: boolean): void {
-    // Reset states first
     this.resetPartSelection();
     
     if (isReplaced) {
-      // Parça değiştirilecekse
       this.loadAvailableParts();
       this.showPartSelectionPanel = true;
-      this.carForm.get('partName')?.enable(); // Arama yapmak için enable et
+      this.carForm.get('stockPartName')?.enable();
       this.carForm.get('quantity')?.enable();
     } else {
-      // Parça değiştirilmeyecekse
       this.showPartSelectionPanel = false;
-      this.carForm.get('partName')?.enable(); // Serbest seçim için enable et
+      this.carForm.get('stockPartName')?.enable();
       this.carForm.get('quantity')?.disable();
       this.carForm.get('quantity')?.setValue(1);
     }
@@ -143,13 +141,12 @@ export class AddCarPage implements OnInit {
   selectPart(part: Part): void {
     this.selectedPart = part;
     
-    // Form alanlarını güncelle
+    // Stok parçası seçildiğinde sadece stockPartName ve quantity alanlarını güncelle
     this.carForm.patchValue({
-      partName: part.name,
+      stockPartName: part.name,
       quantity: 1
     });
     
-    // Miktar alanını etkinleştir ve validasyonu güncelle
     const quantityControl = this.carForm.get('quantity');
     if (quantityControl) {
       quantityControl.enable();
@@ -161,7 +158,7 @@ export class AddCarPage implements OnInit {
       quantityControl.updateValueAndValidity();
     }
     
-    this.filteredParts = []; // Listeyi temizle
+    this.filteredParts = [];
   }
 
   validateQuantity(): void {
@@ -189,10 +186,9 @@ export class AddCarPage implements OnInit {
     this.filteredParts = [];
     this.searchTerm = '';
     
-    // Parça değiştirilecekse inputu temizle
     if (this.carForm.get('isReplaced')?.value === 'true') {
       this.carForm.patchValue({
-        partName: '',
+        stockPartName: '',
         quantity: 1
       });
     }
@@ -206,7 +202,8 @@ export class AddCarPage implements OnInit {
       lastMaintenanceDate: '',
       model: '',
       engineType: '',
-      partName: '',
+      faultyPartName: '',
+      stockPartName: '',
       description: '',
       dateReported: '',
       isReplaced: 'false',
@@ -215,7 +212,7 @@ export class AddCarPage implements OnInit {
     
     this.resetPartSelection();
     this.showPartSelectionPanel = false;
-    this.carForm.get('partName')?.enable();
+    this.carForm.get('stockPartName')?.enable();
     this.carForm.get('quantity')?.disable();
   }
 
@@ -292,14 +289,12 @@ export class AddCarPage implements OnInit {
       return;
     }
 
-    
-
     // Issue verisini hazırla
     const issueData: Issue = {
       id: 0,
       model: formValue.model,
       engineType: formValue.engineType,
-      partName: isReplaced ? (this.selectedPart?.name || '') : formValue.partName,
+      partName: formValue.faultyPartName,
       description: formValue.description || 'Bilinmeyen arıza',
       dateReported: dateReported,
       isReplaced: isReplaced,
@@ -337,7 +332,6 @@ export class AddCarPage implements OnInit {
     this.apiService.addCar(carData).subscribe({
       next: (response) => {
         console.log('Araç başarıyla eklendi:', response);
-        alert("Araç eklendi")
         // Sadece araç ekleme başarılı ve parça değişimi yapılacaksa stok güncellemesi yap
         if (isReplaced && this.selectedPart && this.selectedPart.id && formValue.quantity) {
           // Numeric değerlere çevir

@@ -1,0 +1,566 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  background-color: #000000;
+  height: 100%;
+}
+
+ion-content {
+  --background: #000000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+ion-card {
+  margin: 16px auto;
+  border-radius: 8px;
+  background: #2a2a2a;
+  width: 100%;
+  max-width: 800px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  color:#000000;
+}
+
+ion-card-header {
+  padding: 0;
+  background: #000000;
+  border-radius: 8px 8px 0 0;
+  color:#000000
+}
+ion-header {
+    --background: #000000; /* Header arkaplan siyah */
+  }
+ion-card-title {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-align: center;
+  padding: 16px;
+}
+
+ion-card-subtitle {
+  color: #ccc;
+  font-size: 1rem;
+  text-align: center;
+  margin-top: 4px;
+}
+
+ion-card-content {
+  background: #2a2a2a;
+  color: white;
+  padding: 16px;
+}
+
+ion-item {
+  --background: #2a2a2a;
+  --color: white;
+  --border-color: #333;
+  margin-bottom: 16px;
+  --border-radius: 8px;
+  --padding-start: 16px;
+  --padding-end: 16px;
+}
+
+ion-label {
+  color: white;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+ion-input, ion-textarea, ion-select, ion-datetime {
+  --background: #333;
+  --color: white;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --padding-top: 8px;
+  --padding-bottom: 8px;
+  border-radius: 4px;
+  margin-top: 4px;
+}
+
+ion-button {
+  margin: 16px 0;
+  --background: #3880ff;
+  --background-hover: #2c6ad6;
+  --background-activated: #2c6ad6;
+  font-weight: 600;
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 16px;
+  margin-bottom: 16px;
+}
+
+ion-searchbar {
+  flex: 1;
+  --background: #333;
+  --color: white;
+  --placeholder-color: #ccc;
+  --icon-color: white;
+  --clear-button-color: white;
+  --border-radius: 8px;
+  margin: 0;
+}
+
+.search-button {
+  margin: 0;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  height: 40px;
+}
+
+ion-checkbox {
+  --background: #333;
+  --border-color: #444;
+  --checkmark-color: white;
+  --background-checked: #3880ff;
+  --border-color-checked: #3880ff;
+}
+
+.list-header {
+  --background: #333;
+  --color: white;
+  font-weight: 600;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.header-label {
+  flex: 1;
+  text-align: left;
+  font-size: 0.9rem;
+  color: #ccc;
+}
+
+.list-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-bottom: 1px solid #333;
+}
+
+.item-label {
+  flex: 1;
+  text-align: left;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 4px;
+}
+
+ion-buttons {
+  margin: 0;
+  padding: 0;
+}
+
+ion-icon {
+  font-size: 20px;
+}
+
+.error-message {
+  color: #ff6b6b;
+  font-size: 0.8rem;
+  margin: 4px 16px;
+}
+
+.success-message {
+  color: #00aa55;
+  font-size: 0.9rem;
+  margin: 4px 16px;
+}
+
+ion-toolbar {
+  --background: #000000;
+  --color: #ffffff;
+  --border-color: #333333;
+  --min-height: 56px;
+}
+
+ion-title {
+  color: #ffffff;
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-align: left;
+}
+
+ion-back-button {
+  --color: #ffffff;
+  --icon-font-size: 24px;
+  --icon-margin-end: 8px;
+}
+
+ion-modal {
+  --background: rgba(0, 0, 0, 0.8);
+}
+
+ion-modal ion-content {
+  --background: #2a2a2a;
+}
+
+ion-modal ion-toolbar {
+  --background: #3880ff;
+  --color: white;
+}
+
+/* Responsive düzenlemeler */
+@media (max-width: 576px) {
+  ion-card {
+    margin: 8px;
+  }
+
+  ion-card-header {
+    padding: 12px;
+  }
+
+  ion-card-title {
+    font-size: 1.2rem;
+  }
+
+  ion-item {
+    --padding-start: 12px;
+    --padding-end: 12px;
+  }
+
+  .search-container {
+    flex-direction: column;
+    padding: 0 8px;
+  }
+
+  .search-button {
+    width: 100%;
+  }
+
+  .list-header, .list-item {
+    padding: 8px;
+  }
+
+  .header-label, .item-label {
+    font-size: 0.8rem;
+  }
+}
+
+/* Main Container Styles */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+/* Header Styles */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+h1 {
+  color: #2c3e50;
+  margin: 0;
+}
+
+/* Search Box Styles */
+.search-container {
+  display: flex;
+  gap: 30px;
+}
+
+.search-input {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  width: 250px;
+}
+
+/* Panel Styles */
+.panel {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.form-panel {
+  margin-bottom: 30px;
+}
+
+.table-panel {
+  overflow: hidden;
+}
+
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.table-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+h2 {
+  color: #2c3e50;
+  margin: 0 0 20px 0;
+}
+
+/* Form Styles */
+.form-group {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 600;
+  color: #333;
+}
+
+input[type="text"],
+input[type="number"],
+textarea,
+select {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+
+textarea {
+  resize: vertical;
+}
+
+.error-message {
+  color: #e74c3c;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+/* Table Styles */
+.table-responsive {
+  overflow-x: auto;
+}
+
+.stock-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  color:#444;
+}
+
+.stock-table th {
+  background-color: #f8f9fa;
+  padding: 12px 15px;
+  font-weight: 600;
+  border-bottom: 2px solid #ddd;
+  color: #333;
+}
+
+.stock-table td {
+  padding: 10px 15px;
+  border-bottom: 1px solid #eee;
+  vertical-align: middle;
+}
+
+.stock-table tr:hover {
+  background-color: #f5f5f5;
+}
+
+.status-badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.status-badge.active {
+  background-color: #e1f5fe;
+  color: #0288d1;
+}
+
+.status-badge.passive {
+  background-color: #ffebee;
+  color: #e53935;
+}
+
+.no-data {
+  text-align: center;
+  padding: 20px;
+  color: #888;
+  font-style: italic;
+}
+
+/* Button Styles */
+.btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.primary-btn {
+  background-color: #3498db;
+  color: white;
+}
+
+.primary-btn:hover:not(:disabled) {
+  background-color: #2980b9;
+}
+
+.secondary-btn {
+  background-color: #ecf0f1;
+  color: #34495e;
+}
+
+.secondary-btn:hover:not(:disabled) {
+  background-color: #dde4e6;
+}
+
+.search-btn {
+  background-color: #2c3e50;
+  color: white;
+}
+
+.search-btn:hover {
+  background-color: #1a252f;
+}
+
+.action-btn {
+  padding: 4px 8px;
+  font-size: 12px;
+  margin-right: 5px;
+}
+
+.edit-btn {
+  background-color: #f39c12;
+  color: white;
+}
+
+.edit-btn:hover {
+  background-color: #e67e22;
+}
+
+.delete-btn {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.delete-btn:hover {
+  background-color: #c0392b;
+}
+
+/* Modal Styles */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  border-radius: 8px;
+  width: 400px;
+  max-width: 90%;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+  padding: 15px 20px;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #777;
+}
+
+.close-btn:hover {
+  color: #333;
+}
+
+/* Responsive Adjustments */
+@media screen and (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  
+  .search-container {
+    width: 100%;
+  }
+  
+  .search-input {
+    flex: 1;
+  }
+  
+  .action-btn {
+    margin-bottom: 5px;
+    display: block;
+    width: 100%;
+  }
+}

@@ -45,7 +45,8 @@ export class UpdatePage implements OnInit {
     const today = new Date().toISOString();
     this.updateForm = this.formBuilder.group({
       plateNumber: ['', Validators.required],
-      partName: ['', Validators.required],
+      faultyPartName: ['', Validators.required],
+      stockPartName: ['', Validators.required],
       description: ['', Validators.required],
       isReplaced: [false, Validators.required],
       dateReported: [today, Validators.required],
@@ -111,7 +112,7 @@ export class UpdatePage implements OnInit {
 
     // Issue verisini hazırla
     const issue: CarIssue = {
-      partName: formValue.partName,
+      partName: formValue.faultyPartName,
       description: formValue.description,
       isReplaced: isReplaced,
       dateReported: dateReported,
@@ -304,7 +305,7 @@ export class UpdatePage implements OnInit {
     this.selectedPart = part;
     
     this.updateForm.patchValue({
-      partName: part.name,
+      stockPartName: part.name,
       quantity: 1
     });
     
@@ -347,7 +348,7 @@ export class UpdatePage implements OnInit {
     
     if (this.updateForm.get('isReplaced')?.value === 'true') {
       this.updateForm.patchValue({
-        partName: '',
+        stockPartName: '',
         quantity: 1
       });
     }
@@ -411,11 +412,11 @@ export class UpdatePage implements OnInit {
     if (isReplaced) {
       this.loadAvailableParts();
       this.showPartSelectionPanel = true;
-      this.updateForm.get('partName')?.enable();
+      this.updateForm.get('stockPartName')?.enable();
       this.updateForm.get('quantity')?.enable();
     } else {
       this.showPartSelectionPanel = false;
-      this.updateForm.get('partName')?.enable();
+      this.updateForm.get('stockPartName')?.enable();
       this.updateForm.get('quantity')?.disable();
       this.updateForm.get('quantity')?.setValue(1);
     }
